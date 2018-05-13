@@ -1,0 +1,8 @@
+/*----------------------------------------------------------------------
+  domains
+----------------------------------------------------------------------*/
+dom(sepal_length) = IR [4.3, 7.9];
+dom(sepal_width) = IR [2, 4.4];
+dom(petal_length) = IR [1, 6.9];
+dom(petal_width) = IR [0.1, 2.5];
+dom(iris_type) = { Iris-setosa, Iris-versicolor, Iris-virginica };

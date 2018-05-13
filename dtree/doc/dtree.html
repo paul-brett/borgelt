@@ -1,0 +1,483 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- ===================================================================
+  File    : dtree.html
+  Contents: Description of decision and regression tree programs
+  Author  : Christian Borgelt
+==================================================================== -->
+<html>
+<head>
+<title>Decision and Regression Trees</title>
+
+<style type="text/css">
+body {
+  min-width:   480px;
+  background:  white;
+  color:       black;
+  font-family: sans-serif;
+  font-size:   10pt;
+}
+tt {
+  font-family: courier;
+  font-size:   10pt;
+}
+img {
+  border:      0px;
+}
+</style>
+</head>
+
+<!-- =============================================================== -->
+
+<body>
+<h1><a name="top">Decision and Regression Trees</a></h1>
+<h3>(A Brief Documentation of the Programs dti / dtp / dtx / dtr)</h3>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<h3>Contents</h3>
+<ul style="list-style-type:disc">
+<li><a href="#intro">Introduction</a></li>
+<li><a href="#domains">Determining Attribute Domains</a></li>
+<li><a href="#induce">Inducing a Decision Tree</a></li>
+<li><a href="#prune">Pruning a Decision Tree</a></li>
+<li><a href="#exec">Executing a Decision Tree</a></li>
+<li><a href="#xmat">Computing a Confusion Matrix</a></li>
+<li><a href="#rules">Extracting Rules from a Decision Tree</a></li>
+<li><a href="#other">Other Decision Tree Examples</a></li>
+<li><a href="#license">License</a></li>
+<li><a href="#download">Download</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<h3><a name="intro">Introduction</a></h3>
+
+<p>I am sorry that there is no detailed documentation yet. Below you
+can find a brief explanation of how to grow a decision tree with the
+program <tt>dti</tt>, how to prune a decision tree with the program
+<tt>dtp</tt>, how to execute a decision tree with the program
+<tt>dtx</tt>, and how to extract rules from a decision tree with the
+program <tt>dtr</tt>. For a list of options, call the programs without
+any arguments.</p>
+
+<p>Enjoy,<br>
+<a href="http://fuzzy.cs.uni-magdeburg.de/~borgelt/">
+Christian Borgelt</a></p>
+
+<p>As a simple example for the explanations below I use the dataset
+in the file <tt>dtree/ex/drug.tab</tt>, which lists 12 records of
+patient data (sex, age, and blood pressure) together with an effective
+drug (effective w.r.t. some unspecified disease). The contents of this
+file is:</p>
+
+<pre>   Sex    Age Blood_pressure Drug
+   male   20  normal         A
+   female 73  normal         B
+   female 37  high           A
+   male   33  low            B
+   female 48  high           A
+   male   29  normal         A
+   female 52  normal         B
+   male   42  low            B
+   male   61  normal         B
+   female 30  normal         A
+   female 26  low            B
+   male   54  high           A
+</pre>
+
+<table width="100%" border=0 cellpadding=0 cellspacing=0>
+<tr><td style="width:95%" align="right">
+        <a href="#top">back to the top</a></td>
+    <td style="width:5px"></td>
+    <td><a href="#top"><img src="up.gif" alt="top"></a></td></tr>
+</table>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<h3><a name="domains">Determining Attribute Domains</a></h3>
+
+<p>To induce a decision tree for the effective drug, one first
+has to determine the domains of the table columns using the program
+<tt>dom</tt> (to be found in the table package, see below):</p>
+
+<pre>  dom -a drug.tab drug.dom</pre>
+
+<p>The program <tt>dom</tt> assumes that the first line of the table
+file contains the column names. (This is the case for the example file
+<tt>drug.tab</tt>.) If you have a table file without column names, you
+can let the program read the column names from another file (using the
+<tt>-h</tt> option) or you can let the program generate default names
+(using the <tt>-d</tt> option), which are simply the column numbers.
+The <tt>-a</tt> option tells the program to determine automatically
+the column data types. Thus the values of the <tt>Age</tt> column are
+automatically recognized as integer values.</p>
+
+<p>After dom has finished, the contents of the file <tt>drug.dom</tt>
+should look like this:</p>
+
+<pre>  dom(Sex) = { male, female };
+  dom(Age) = ZZ;
+  dom(Blood_pressure) = { normal, high, low };
+  dom(Drug) = { A, B };
+</pre>
+
+<p>The special domain <tt>ZZ</tt> represents the set of integer numbers,
+the special domain <tt>IR</tt> (not used here) the set of real numbers.
+(The double <tt>Z</tt> and the <tt>I</tt> in front of the <tt>R</tt>
+are intended to mimic the bold face or double stroke font used in
+mathematics to write the set of integer or the set of real numbers.
+All programs that need to read a domain description also recognize
+a single <tt>Z</tt> or a single <tt>R</tt>.)</p>
+
+<table width="100%" border=0 cellpadding=0 cellspacing=0>
+<tr><td style="width:95%" align="right">
+        <a href="#top">back to the top</a></td>
+    <td style="width:5px"></td>
+    <td><a href="#top"><img src="up.gif" alt="top"></a></td></tr>
+</table>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<h3><a name="induce">Inducing a Decision Tree</a></h3>
+
+<p>To induce a decision tree using the <tt>dti</tt> program
+(<tt>dti</tt> is simply an abbreviation of Decision Tree Induction),
+type</p>
+
+<pre>  dti -a drug.dom drug.tab drug.dt</pre>
+
+<p>You need not tell the program <tt>dti</tT> that the Drug column
+contains the class, since by default it uses the last column as the
+class column (the <tt>Drug</tt> column is the last column in the file
+<tt>drug.tab</tt>). If a different column contains the class, you can
+specify its name on the command line using the <tt>-c</tt> option,
+e.g. <tt>-c Drug</tt>.</p>
+
+<p>At first glance it seems to be superfluous to provide the
+<tt>dti</tt> program with a domain description, since it is also
+given the table file and thus can determine the domains itself.
+But without a domain description, the <tt>dti</tt> program would be
+forced to use all columns in the table file and to use them with the
+automatically determined data types. But occasions may arise in which
+you want to induce a decision tree from a subset of the columns or in
+which the numbers in a column are actually coded symbolic values. In
+such a case the domain file provides a way to tell the <tt>dti</tt>
+program about the columns to use and their data types. To ignore a
+column, simply remove the corresponding domain definition from the
+domain description file (or comment it out --- C-style
+(<tt>/* ... */</tt>) and C++-style (<tt>// ...</tt>) comments are
+supported). To change the data type of a column, simply change the
+domain definition.</p>
+
+<p>By default the program <tt>dti</tt> uses information gain ratio as
+the attribute selection measure. Other measures can be selected via
+the <tt>-e</tt> option. Call <tt>dti</tt> with option <tt>-!</tt> for
+a list of available attribute selection measures.</p>
+
+<p>With the above command the induced decision tree is written to the
+file <tt>drug.dt</tt>. The contents of this file should look like
+this:</p>
+
+<pre>  dtree(Drug) =
+  { (Blood_pressure)
+    normal:{ (Age|41)
+             <:{ A: 3 },
+             >:{ B: 3 }},
+    high  :{ A: 3 },
+    low   :{ B: 3 }};
+</pre>
+
+<p>Since the <tt>-a</tt> option was given, the colons after the values
+of an attribute (here, for example, the values of the attribute
+<tt>Blood_pressure</tt>) are aligned. This makes a decision tree easier
+to read, but may result in larger than necessary output files.</p>
+
+<table width="100%" border=0 cellpadding=0 cellspacing=0>
+<tr><td style="width:95%" align="right">
+        <a href="#top">back to the top</a></td>
+    <td style="width:5px"></td>
+    <td><a href="#top"><img src="up.gif" alt="top"></a></td></tr>
+</table>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<h3><a name="prune">Pruning a Decision Tree</a></h3>
+
+<p>Although it is not necessary for our simple example, the induced
+decision tree can be pruned, i.e., simplified by removing some
+decisions. This is done by invoking the program <tt>dtp</tt>
+(<tt>dtp</tt> is simply an abbreviation for Decision Tree Pruning):</p>
+
+<pre>  dtp -a drug.dt drug_p.dt</pre>
+
+<p>The table the decision tree was induced from can be given as a
+third argument to the <tt>dtp</tt> program. In this case an additional
+way of pruning (replacing an inner node (an attribute test) by its
+largest child) is enabled.</p>
+
+<p>By default dtp uses confidence level pruning with a confidence
+level of 0.5 as the pruning method. The confidence level can be
+changed via the <tt>-p</tt> option (pruning parameter), the pruning
+method via the <tt>-m</tt> option. Call <tt>dtp</tt> without arguments
+for a list of available pruning methods.</p>
+
+<table width="100%" border=0 cellpadding=0 cellspacing=0>
+<tr><td style="width:95%" align="right">
+        <a href="#top">back to the top</a></td>
+    <td style="width:5px"></td>
+    <td><a href="#top"><img src="up.gif" alt="top"></a></td></tr>
+</table>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<h3><a name="exec">Executing a Decision Tree</a></h3>
+
+<p>An induced decision tree can be used to classify new data using the
+program <tt>dtx</tt> (<tt>dtx</tt> is simply an abbreviation for
+Decision Tree Execution):</p>
+
+<pre>  dtx -a drug.dt drug.tab drug.cls</pre>
+
+<p><tt>drug.tab</tt> is the table file (since we do not have special
+test data, we simply use the training data), <tt>drug.cls</tt> is
+the output file. After <tt>dtx</tt> has finished, <tt>drug.cls</tt>
+contains (in addition to the columns appearing in the decision tree,
+and, for preclassified data, the class column) a new column <tt>dt</tt>,
+which contains the class that is predicted by the decision tree.
+You can give this new column a different name with the <tt>-p</tt>
+option, e.g. <tt>-p decision_tree_class</tt>.</p>
+
+<p>If the table contains preclassified data and the name of the column
+containing the preclassification is the same as for the training data,
+the error rate of the decision tree is determined and printed to the
+terminal.</p>
+
+<p>The contents of the file drug.cls should look like this:</p>
+
+<pre>  Sex    Age Blood_pressure Drug dt
+  male   20  normal         A    A
+  female 73  normal         B    B
+  female 37  high           A    A
+  male   33  low            B    B
+  female 48  high           A    A
+  male   29  normal         A    A
+  female 52  normal         B    B
+  male   42  low            B    B
+  male   61  normal         B    B
+  female 30  normal         A    A
+  female 26  low            B    B
+  male   54  high           A    A
+</pre>
+
+<p>That is, the classification is perfect, which is not surprising
+for such a simple example. The columns are neatly aligned because of
+the <tt>-a</tT> option. Without it, there would only be a single
+space between two column values.</p>
+
+<table width="100%" border=0 cellpadding=0 cellspacing=0>
+<tr><td style="width:95%" align="right">
+        <a href="#top">back to the top</a></td>
+    <td style="width:5px"></td>
+    <td><a href="#top"><img src="up.gif" alt="top"></a></td></tr>
+</table>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<h3><a name="xmat">Computing a Confusion Matrix</a></h3>
+
+<p>The classification quality can be inspected in more detail with
+the program <tt>xmat</tt> (determine a confusion matrix, to be found
+in the table package, see below):</p>
+
+<pre>  xmat drug.cls</pre>
+
+<p>This program reads the output of the program <tt>dtx</tt> and
+computes a confusion matrix from two columns of this file. It uses
+the last two columns by default (the last column for the x- and the
+semi-last for the y-direction), which is fine for our example. Other
+columns can be selected via the options <tt>-x</tt> and <tt>-y</tt>
+followed by the name of the column that is to be used for the x- or
+y-direction of the confusion matrix. The output of the program
+<tt>xmat</tt>, which by default is written to the terminal, should
+read like this:</p>
+
+<pre>  confusion matrix for Drug vs. dt:
+   no | value  |      1      2 | errors
+  ----+--------+---------------+-------
+    1 | A      |      6      0 |      0
+    2 | B      |      0      6 |      0
+  ----+--------+---------------+-------
+      | errors |      0      0 |      0
+</pre>
+
+<p>In this matrix the x-direction corresponds to the column <tt>dt</tt>
+and the y-direction to the column <tt>Drug</tt>. Since in our simple
+example the classification is perfect, only the fields in the diagonal
+differ from zero. If the classification is not perfect, the other
+fields show what errors are made by the decision tree classifier.</p>
+
+<table width="100%" border=0 cellpadding=0 cellspacing=0>
+<tr><td style="width:95%" align="right">
+        <a href="#top">back to the top</a></td>
+    <td style="width:5px"></td>
+    <td><a href="#top"><img src="up.gif" alt="top"></a></td></tr>
+</table>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<h3><a name="rules">Extracting Rules from a Decision Tree</a></h3>
+
+<p>If you like rules better than trees, you can extract rules from a
+learned decision tree with the program <tt>dtr</tt> (<tt>dtr</tt> is
+simply an abbreviation for Decision Tree Rule Extraction).</p>
+
+<pre>  dtr -sc drug.dt drug.rs</pre>
+
+<p><tt>drug.dt</tt> is the decision tree file, <tt>drug.rs</tt> the
+file to which the rules shall be written. The option <tt>-s</tt>
+instructs the program to print the support of each rule, i.e., the
+number of cases in the training data set the rule applies to, and
+the option <tt>-c</tt> instructs it to print the confidence of each
+rule, i.e., the percentage of cases in which a rule is correct
+relative to the number of cases in which it is applicable. The file
+<tt>drug.rs</tt> should contain the following set of rules:</p>
+
+<pre>  Drug = A <- Blood_pressure = high [3/100.0%];
+  Drug = B <- Blood_pressure = low [3/100.0%];
+  Drug = A <- Age < 41 & Blood_pressure = normal [3/100.0%];
+  Drug = B <- Age > 41 & Blood_pressure = normal [3/100.0%];
+</pre>
+
+<p>The numbers in brackets are the number of cases in the training
+data set the rule applies to (first number) and the confidence
+(second number). Note that there is one rule for each leaf of the
+decision tree. The program tries to simplify the rules by combining
+conditions on numeric attributes if possible, but it will not
+simplify the rule set by merging rules.</p>
+
+<table width="100%" border=0 cellpadding=0 cellspacing=0>
+<tr><td style="width:95%" align="right">
+        <a href="#top">back to the top</a></td>
+    <td style="width:5px"></td>
+    <td><a href="#top"><img src="up.gif" alt="top"></a></td></tr>
+</table>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<h3><a name="other">Other Decision Tree Examples</a></h3>
+
+<p>The decision trees in the directory <tt>dtree/ex</tt> (files with
+extensions <tt>.dt</tt> and <tt>.pdt</tt>) were created with the
+following commands:</p>
+
+<pre>  dti -a drug.dom drug.tab drug.dt
+  dti iris.dom iris.tab iris.dt
+  dti -s monk1.dom monk1.tab monk1.dt
+  dtp monk1.dt monk1.pdt monk1.tab
+  dti vote.dom vote.tab vote.dt
+  dtp vote.dt vote.pdt
+  dti wine.dom wine.tab wine.dt
+</pre>
+
+<table width="100%" border=0 cellpadding=0 cellspacing=0>
+<tr><td style="width:95%" align="right">
+        <a href="#top">back to the top</a></td>
+    <td style="width:5px"></td>
+    <td><a href="#top"><img src="up.gif" alt="top"></a></td></tr>
+</table>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<h3><a name="license">License</a></h3>
+
+<p>(MIT license, or more precisely Expat License;
+to be found in the file <tt>mit-license.txt</tt> in the directory
+<tt>dtree/doc</tt> in the source package of the program, see also
+<a href="http://www.opensource.org/licenses/MIT">opensource.org</a> and
+<a href="http://en.wikipedia.org/wiki/MIT_license">wikipedia.org</a>)
+</p>
+
+<p>&copy; 1996-2016 Christian Borgelt</p>
+
+<p>Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software,
+and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+
+<table width="100%" border=0 cellpadding=0 cellspacing=0>
+<tr><td style="width:95%" align="right">
+        <a href="#top">back to the top</a></td>
+    <td style="width:5px"></td>
+    <td><a href="#top"><img src="up.gif" alt="top"></a></td></tr>
+</table>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<h3><a name="download">Download</a></h3>
+
+<p><a href="http://fuzzy.cs.uni-magdeburg.de/~borgelt/dtree.html">
+Download page</a> with most recent version.</p>
+
+<table width="100%" border=0 cellpadding=0 cellspacing=0>
+<tr><td style="width:95%" align="right">
+        <a href="#top">back to the top</a></td>
+    <td style="width:5px"></td>
+    <td><a href="#top"><img src="up.gif" alt="top"></a></td></tr>
+</table>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<h3><a name="contact">Contact</a></h3>
+
+<table border=0 cellpadding=0 cellspacing=0>
+<tr><td valign="top">E-mail:</td><td style="width:10px"></td>
+    <td><a href="mailto:christian@borgelt.net">
+        christian@borgelt.net</a><br>
+<tr><td valign="top">Website:</td><td></td>
+    <td><a href="http://www.borgelt.net/">
+        www.borgelt.net</a><br>
+</table>
+
+<table width="100%" border=0 cellpadding=0 cellspacing=0>
+<tr><td style="width:95%" align="right">
+        <a href="#top">back to the top</a></td>
+    <td style="width:5px"></td>
+    <td><a href="#top"><img src="up.gif" alt="top"></a></td></tr>
+</table>
+
+<!-- =============================================================== -->
+<p><img src="line.gif" alt="" height=7 width=704></p>
+
+<address>&copy; 1999-2016
+<a href="mailto:christian@borgelt.net">Christian Borgelt</a>
+</address>
+</body>
+</html>

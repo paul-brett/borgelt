@@ -1,0 +1,32 @@
+/*----------------------------------------------------------------------
+  domains
+----------------------------------------------------------------------*/
+dom(adoption_of_the_budget_resolution) = { n, y };
+dom(physician_fee_freeze) = { n, y };
+dom(anti_satellite_test_ban) = { n, y };
+dom(mx_missile) = { n, y };
+dom(synfuels_corporation_cutback) = { n, y };
+dom(party) = { democrat, republican };
+
+/*----------------------------------------------------------------------
+  decision tree
+----------------------------------------------------------------------*/
+dtree(party) =
+{ (physician_fee_freeze)
+  n:{ democrat: 249.66, republican: 3.74764 },
+  y:{ (synfuels_corporation_cutback)
+      n:{ democrat: 4.00489, republican: 141.704 },
+      y:{ (mx_missile)
+          n:{ (adoption_of_the_budget_resolution)
+              n:{ democrat: 3.31608, republican: 19.2895 },
+              y:{ (anti_satellite_test_ban)
+                  n:{ democrat: 5.01876, republican: 0.0231814 },
+                  y:{ republican: 2.20775 }}},
+          y:{ democrat: 4.99988, republican: 1.02771 }}}};
+
+/*----------------------------------------------------------------------
+  number of attributes: 6
+  tree height         : 6
+  number of nodes     : 11
+  number of tuples    : 435
+----------------------------------------------------------------------*/

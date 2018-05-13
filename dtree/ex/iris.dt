@@ -1,0 +1,29 @@
+/*----------------------------------------------------------------------
+  domains
+----------------------------------------------------------------------*/
+dom(petal_length) = IR [1, 6.9];
+dom(petal_width) = IR [0.1, 2.5];
+dom(iris_type) = { Iris-setosa, Iris-versicolor, Iris-virginica };
+
+/*----------------------------------------------------------------------
+  decision tree
+----------------------------------------------------------------------*/
+dtree(iris_type) =
+{ (petal_length|2.45)
+  <:{ Iris-setosa: 50 },
+  >:{ (petal_width|1.75)
+      <:{ (petal_length|5.35)
+          <:{ (petal_length|4.95)
+              <:{ Iris-versicolor: 47, Iris-virginica: 1 },
+              >:{ (petal_width|1.55)
+                  <:{ Iris-virginica: 2 },
+                  >:{ Iris-versicolor: 2 }}},
+          >:{ Iris-virginica: 2 }},
+      >:{ Iris-versicolor: 1, Iris-virginica: 45 }}};
+
+/*----------------------------------------------------------------------
+  number of attributes: 2+1
+  number of levels    : 6
+  number of nodes     : 11
+  number of tuples    : 150
+----------------------------------------------------------------------*/

@@ -1,0 +1,62 @@
+/*----------------------------------------------------------------------
+  domains
+----------------------------------------------------------------------*/
+dom(handicapped_infants) = { n, y };
+dom(adoption_of_the_budget_resolution) = { n, y };
+dom(physician_fee_freeze) = { n, y };
+dom(religious_groups_in_schools) = { n, y };
+dom(anti_satellite_test_ban) = { n, y };
+dom(aid_to_nicaraguan_contras) = { n, y };
+dom(mx_missile) = { n, y };
+dom(immigration) = { n, y };
+dom(synfuels_corporation_cutback) = { n, y };
+dom(education_spending) = { n, y };
+dom(superfund_right_to_sue) = { n, y };
+dom(duty_free_exports) = { n, y };
+dom(export_administration_act_south_africa) = { n, y };
+dom(party) = { democrat, republican };
+
+/*----------------------------------------------------------------------
+  decision tree
+----------------------------------------------------------------------*/
+dtree(party) =
+{ (physician_fee_freeze)
+  n:{ (adoption_of_the_budget_resolution)
+      n:{ (synfuels_corporation_cutback)
+          n:{ (superfund_right_to_sue)
+              n:{ (aid_to_nicaraguan_contras)
+                  n:{ democrat: 1.00463, republican: 1.00926 },
+                  y:{ (religious_groups_in_schools)
+                      n:{ democrat: 1.00463, republican: 1.00926 },
+                      y:{ democrat: 2.10611, republican: 0.00972802 }}},
+              y:{ democrat: 4.13474, republican: 0.0783537 }},
+          y:{ democrat: 15.2306, republican: 0.0703491 }},
+      y:{ democrat: 226.18, republican: 1.57069 }},
+  y:{ (synfuels_corporation_cutback)
+      n:{ (education_spending)
+          n:{ (duty_free_exports)
+              n:{ democrat: 0.570472, republican: 11.7562 },
+              y:{ (anti_satellite_test_ban)
+                  n:{ democrat: 2.13596, republican: 1.41742 },
+                  y:{ democrat: 0.00931089, republican: 4.04093 }}},
+          y:{ democrat: 1.28915, republican: 124.49 }},
+      y:{ (mx_missile)
+          n:{ (adoption_of_the_budget_resolution)
+              n:{ (immigration)
+                  n:{ (export_administration_act_south_africa)
+                      n:{ (handicapped_infants)
+                          n:{ democrat: 2, republican: 1.85079 },
+                          y:{ democrat: 0.451428, republican: 2.00565 }},
+                      y:{ democrat: 0.864656, republican: 6.80061 }},
+                  y:{ republican: 8.6325 }},
+              y:{ (anti_satellite_test_ban)
+                  n:{ democrat: 5.01876, republican: 0.0231814 },
+                  y:{ republican: 2.20775 }}},
+          y:{ democrat: 4.99988, republican: 1.02771 }}}};
+
+/*----------------------------------------------------------------------
+  number of attributes: 14
+  tree height         : 8
+  number of nodes     : 33
+  number of tuples    : 435
+----------------------------------------------------------------------*/

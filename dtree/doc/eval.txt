@@ -1,0 +1,204 @@
+References for Evaluation Measures:
+
+- mutual information/information gain/cross entropy
+
+\bibitem{Kullback and Leibler 1951}
+  S.~Kullback and R.A.~Leibler. \newblock
+  On Information and Sufficiency. \newblock
+  {\em Ann.\ Math.\ Statistics\/} 22:79--86, 1951
+\bibitem{Chow and Liu 1968}
+  C.K.~Chow and C.N.~Liu. \newblock
+  Approximating Discrete Probability Distributions with
+  Dependence Trees. \newblock
+  {\em IEEE Trans.\ on Information Theory} 14(3):462--467,
+  IEEE 1968
+\bibitem{Quinlan 1986}
+  J.R.~Quinlan. \newblock
+  Induction of Decision Trees. \newblock
+  {\em Machine Learning\/} 1:81--106, 1986
+\bibitem{Quinlan 1993}
+  J.R.~Quinlan. \newblock
+  {\em C4.5: Programs for Machine Learning},
+  Morgan Kaufman, 1993
+
+- information gain ratio
+
+\bibitem{Quinlan 1986}
+  J.R.~Quinlan. \newblock
+  Induction of Decision Trees. \newblock
+  {\em Machine Learning\/} 1:81--106, 1986
+\bibitem{Quinlan 1993}
+  J.R.~Quinlan. \newblock
+  {\em C4.5: Programs for Machine Learning},
+  Morgan Kaufman, 1993
+
+- symmetric information gain ratio
+
+\bibitem{Lopez de Mantaras 1991}
+  R.~Lopez de Mantaras. \newblock
+  A Distance-based Attribute Selection Measure
+  for Decision Tree Induction. \newblock
+  {\em Machine Learning} 6:81--92, Kluwer 1991
+
+- Gini index
+
+\bibitem{Breiman et al 1984}
+  L.~Breiman, J.H.~Friedman, R.A.~Olshen, and C.J.~Stone. \newblock
+  {\em Classification and Regression Trees},
+  Wadsworth International Group, Belmont, CA, 1984
+
+- symmetric Gini index
+
+\bibitem{Zhou and Dillon 1991}
+  X.~Zhou and T.S.~Dillon. \newblock
+  A statistical-heuristic Feature Selection Criterion
+  for Decision Tree Induction. \newblock
+  {\em IEEE Trans.\ on Pattern Analysis and Machine Intelligence},
+  13:834--841, 1991
+
+- modified Gini index
+
+\bibitem{Kononenko 1995}
+  I.~Kononenko. \newblock
+  On Biases in Estimating Multi-Valued Attributes. \newblock
+  {\em Proc.\ 1st Int.\ Conf.\ on Know\-ledge Discovery
+  and Data Mining}, 1034--1040, Montreal, 1995
+
+- relief measure
+
+\bibitem{Kira and Rendell 1992}
+  K.~Kira and L.~Rendell. \newblock
+  A Practical Approach to Feature Selection. \newblock
+  {\em Proc.\ 9th Int.\ Conf.\ on Machine Learning (ICML'92)},
+  pp.~250--256, Morgan Kaufman, San Franscisco, CA, 1992
+\bibitem{Kononenko 1994}
+  I.~Kononenko. \newblock
+  Estimating Attributes: Analysis and Extensions of RELIEF. \newblock
+  {\em Proc.\ 7th Europ.\ Conf.\ on Machine Learning (ECML'94)},
+  Springer, New York, NY, 1994
+\bibitem{Kononenko 1995}
+  I.~Kononenko. \newblock
+  On Biases in Estimating Multi-Valued Attributes. \newblock
+  {\em Proc.\ 1st Int.\ Conf.\ on Know\-ledge Discovery
+  and Data Mining}, 1034--1040, Montreal, 1995
+
+- chi^2 measure
+
+well known in statistics
+
+- weight of evidence
+
+\bibitem{Michie 1989}
+  D.~Michie. \newblock
+  Personal Models of Rationality. \newblock
+  {\em J.\ of Statistical Planning and Inference}, Special Issue
+  on Foundations and Philosophy of Probability and Statistics,
+  21, 1989
+\bibitem{Kononenko 1995}
+  I.~Kononenko. \newblock
+  On Biases in Estimating Multi-Valued Attributes. \newblock
+  {\em Proc.\ 1st Int.\ Conf.\ on Know\-ledge Discovery
+  and Data Mining}, 1034--1040, Montreal, 1995
+
+- relevance
+
+\bibitem{Baim 1988}
+  P.W.~Baim. \newblock
+  A Method for Attribute Selection in Inductive Learning Systems.
+  \newblock
+  {\em IEEE Trans.\ on Pattern Analysis and Machine Intelligence},
+  10:888-896, 1988
+
+- log2(g)/N
+
+\bibitem{Cooper and Herskovits 1992}
+  G.F.~Cooper and E.~Herskovits. \newblock
+  A Bayesian Method for the Induction
+  of Probabilistic Networks from Data. \newblock
+  {\em Machine Learning\/} 9:309--347, Kluwer 1992
+
+- reduction of description length
+
+\bibitem{Rissanen 1983}
+  J.~Rissanen. \newblock
+  A Universal Prior for Integers and Estimation by Minimum
+  Description Length. \newblock
+  {\em Annals of Statistics\/} 11:416--431, 1983
+\bibitem{Rissanen 1987}
+  J.~Rissanen. \newblock
+  Stochastic Complexity. \newblock
+  {\em Journal of the Royal Statistical Society (Series B)},
+  49:223-239, 1987
+\bibitem{Kononenko 1995}
+  I.~Kononenko. \newblock
+  On Biases in Estimating Multi-Valued Attributes. \newblock
+  {\em Proc.\ 1st Int.\ Conf.\ on Know\-ledge Discovery
+  and Data Mining}, 1034--1040, Montreal, 1995
+
+- stochastic complexity
+
+\bibitem{Krichevsky and Trofimov 1983}
+  R.E.~Krichevsky and V.K.~Trofimov. \newblock
+  The Performance of Universal Coding. \newblock
+  {\em IEEE Trans.\ on Information Theory}, IT-27(2):199--207, 1983
+\bibitem{Rissanen 1987}
+  J.~Rissanen. \newblock
+  Stochastic Complexity. \newblock
+  {\em Journal of the Royal Statistical Society (Series B)},
+  49:223-239, 1987
+\bibitem{Rissanen 1995}
+  J.~Rissanen. \newblock
+  Stochastic Complexity and Its Applications. \newblock
+  {\em Proc.\ Workshop on Model Uncertainty and Model Robustness},
+  Bath, England, 1995
+
+- possibilistic chi^2 measure
+
+\bibitem{Borgelt and Kruse 1997a}
+  C.~Borgelt and R.~Kruse. \newblock
+  Evaluation Measures for Learning Probabilistic
+  and Possibilistic Networks. \newblock
+  {\em Proc.\ 6th IEEE Int.\ Conf.\ on Fuzzy Systems (FUZZ-IEEE'97)},
+  Vol.~2:pp.~1034--1038, Barcelona, Spain, 1997
+
+- specificity gain
+
+\bibitem{Gebhardt and Kruse 1995b}
+  J.~Gebhardt and R.~Kruse. \newblock
+  Learning Possibilistic Networks from Data. \newblock
+  {\em Proc.\ 5th Int.\ Workshop on Artificial Intelligence
+  and Statistics}, 233--244, Fort Lauderdale, 1995
+\bibitem{Gebhardt and Kruse 1996}
+  J.~Gebhardt and R.~Kruse. \newblock
+  Tightest Hypertree Decompositions of
+  Multivariate Possibility Distributions. \newblock
+  {\em Proc.\ Int.\ Conf.\ on Information Processing and
+  Management of Uncertainty in Knowledge-based Systems}, 1996
+\bibitem{Borgelt et al 1996}
+  C.~Borgelt, J.~Gebhardt, and R.~Kruse. \newblock
+  Concepts for Probabilistic and Possibilistic Induction
+  of Decision Trees on Real World Data. \newblock
+  {\em Proc. of the EUFIT'96}, Vol.~3:1556--1560, 1996
+
+- (symmetric) specificity gain ratio
+
+\bibitem{Borgelt et al 1996}
+  C.~Borgelt, J.~Gebhardt, and R.~Kruse. \newblock
+  Concepts for Probabilistic and Possibilistic Induction
+  of Decision Trees on Real World Data. \newblock
+  {\em Proc. of the EUFIT'96}, Vol.~3:1556--1560, 1996
+\bibitem{Borgelt and Kruse 1997a}
+  C.~Borgelt and R.~Kruse. \newblock
+  Evaluation Measures for Learning Probabilistic
+  and Possibilistic Networks. \newblock
+  {\em Proc.\ 6th IEEE Int.\ Conf.\ on Fuzzy Systems (FUZZ-IEEE'97)},
+  Vol.~2:pp.~1034--1038, Barcelona, Spain, 1997
+\bibitem{Borgelt and Kruse 1997b}
+  C.~Borgelt and R.~Kruse. \newblock
+  Some Experimental Results on Learning Probabilistic and
+  Possibilistic Networks with Different Evaluation Measures.
+  \newblock
+  {\em Proc.\ 1st Int.\ Joint Conference on Qualitative and
+  Quantitative Practical Reasoning (ECSQARU/FAPR'97)},
+  pp.~71--85, Springer, Berlin, Germany, 1997
+
